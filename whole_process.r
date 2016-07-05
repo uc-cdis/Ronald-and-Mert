@@ -28,7 +28,7 @@ whole_process <- function(project_names)
   files <- list.files()[grep("GDC_METADATA.txt", list.files())]
   details <- file.info(list.files()[grep("GDC_METADATA.txt", list.files())])
   details <- details[with(details, order(as.POSIXct(mtime))), ]
-  metadata_filename <- rownames(details)[length(details)] 
+  metadata_filename <- rownames(details)[length(files)] 
   print(metadata_filename)
 
   # normalizing the data
