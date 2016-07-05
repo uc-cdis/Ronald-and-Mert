@@ -1,12 +1,12 @@
 whole_process <- function(project_names)
 {
-  source("~/git/Kevin_R_scripts/install_r_prereqs.r")
-  source("~/git/Kevin_R_scripts/preprocessing_tool.r")
-  source("~/git/Kevin_R_scripts/heatmap_dendrogram.r")
-  source("~/git/Kevin_R_scripts/calculate_pco.r")
-  source("~/git/Kevin_R_scripts/render_calculated_pcoa.r")
-  source("~/git/ronald_r_scripts/GDC_raw_count_merge.vRonald.r")
-  source("~/git/ronald_r_scripts/get_listof_UUIDs.r")
+  source("~/git/Kevin_R_scripts/install_r_prereqs.r")       # from Kevin_R_scripts
+  source("~/git/Kevin_R_scripts/preprocessing_tool.r")      # "                  "
+  source("~/git/Kevin_R_scripts/heatmap_dendrogram.r")      # "                  "
+  source("~/git/Kevin_R_scripts/calculate_pco.r")           # "                  "
+  source("~/git/Kevin_R_scripts/render_calculated_pcoa.r")  # "                  "
+  source("~/git/ronald_r_scripts/GDC_raw_count_merge.vRonald.r") # from ronald_r_scripts
+  source("~/git/ronald_r_scripts/get_listof_UUIDs.r")            # "                   "
   source("~/git/R_and_M_scripts/GDC_metadata_download.RandM.r")
   library(DESeq)
  
