@@ -1,13 +1,13 @@
 whole_process <- function(project_names)
 {
-  source("~/git/Ronald_and_Mert/install_r_prereqs.r")       # from Kevin_R_scripts
-  source("~/git/Ronald_and_Mert/preprocessing_tool.r")      # "                  "
-  source("~/git/Ronald_and_Mert/heatmap_dendrogram.r")      # "                  "
-  source("~/git/Ronald_and_Mert/calculate_pco.r")           # "                  "
-  source("~/git/Ronald_and_Mert/render_calculated_pcoa.r")  # "                  "
-  source("~/git/Ronald_and_Mert/GDC_raw_count_merge.vRonald.r") # from ronald_r_scripts
-  source("~/git/Ronald_and_Mert/get_listof_UUIDs.r")            # "                   "
-  source("~/git/Ronald_and_Mert/GDC_metadata_download.RandM.r")
+  source("~/git/Ronald-and-Mert/install_r_prereqs.r")       # from Kevin_R_scripts
+  source("~/git/Ronald-and-Mert/preprocessing_tool.r")      # "                  "
+  source("~/git/Ronald-and-Mert/heatmap_dendrogram.r")      # "                  "
+  source("~/git/Ronald-and-Mert/calculate_pco.r")           # "                  "
+  source("~/git/Ronald-and-Mert/render_calculated_pcoa.r")  # "                  "
+  source("~/git/Ronald-and-Mert/GDC_raw_count_merge.vRonald.r") # from ronald_r_scripts
+  source("~/git/Ronald-and-Mert/get_listof_UUIDs.r")            # "                   "
+  source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
   library(DESeq)
  
   # downloads data
