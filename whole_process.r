@@ -25,7 +25,8 @@ whole_process <- function(project_names)
   
   # gets metadata file
   get_GDC_metadata("counts_files.merged_data_file_UUIDs", my_rot = "yes")
-  details <- file.info(list.files()[grep("GDC_METADATA.txt", list.files())][1])
+  files <- list.files()[grep("GDC_METADATA.txt", list.files())]
+  details <- file.info(list.files()[grep("GDC_METADATA.txt", list.files())])
   details <- details[with(details, order(as.POSIXct(mtime))), ]
   metadata_filename <- rownames(details)[length(details)] 
   print(metadata_filename)
