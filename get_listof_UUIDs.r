@@ -13,13 +13,10 @@ library(RJSONIO)
 library(RCurl)
 library(tools)
 
-library(tictoc)
-
 # given a project name, list of names, or a tsv with the file names 
 # as the column names produces a list of UUIDs
 export_listof_UUIDs <- function(project="", names="", tsv="")
 {
-	tic()
   if (project != "")
   {
     vector_of_files <- unlist(get_UUIDs_from_project(project))
@@ -43,7 +40,6 @@ export_listof_UUIDs <- function(project="", names="", tsv="")
   {
     print("Error: no argument given to function")
   }
-  toc()
 }
 
 get_UUIDs_from_project <- function(project,
