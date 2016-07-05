@@ -14,7 +14,7 @@ whole_process <- function(project1, project2="")
   download_project_data(project1)
   if (project2 != "")
   {
-    download_project_data(project2)
+ 	download_project_data(project2)
   }
 
   # unzips data into .counts files
