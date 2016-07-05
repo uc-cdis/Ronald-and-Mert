@@ -49,6 +49,8 @@ render_calcualted_pcoa <- function(
                             bar_vert_adjust = 0,  
                             use_all_metadata_columns=FALSE, # option to overide color_column -- if true, plots are generate for all of the metadata columns
                             debug=FALSE
+
+                            mv_to_mount=FALSE # option to move all files in the folder to the ~/mnt folder
                             )
   
 {
@@ -421,7 +423,12 @@ render_calcualted_pcoa <- function(
                     image_width_in, image_height_in, image_res_dpi,
                     width_legend, width_figure,
                     title_cex, legend_cex, figure_cex, figure_symbol_cex, bar_cex, bar_vert_adjust, label_points, vert_line, debug
-                    )        
+                    )  
+        if(mv_to_mount == T)
+        {
+          move_files(path = "~/mnt")
+        }
+
       }
       
       
@@ -1205,6 +1212,14 @@ create_pch <- function(metadata_table, metadata_column, sample_names, debug){ # 
 ######################
 ######################
 
+######################
+# SUB(13): Move around files
+######################
+move_files <- function(extension = "",path){
+  system(paste("mv *",extension," ",path,sep=""))
+}
+######################
+######################
     
 ## create_colors <- function(metadata_matrix, color_mode = "auto"){ # function to     
 ##   #my_data.color <- data.frame(metadata_matrix)
