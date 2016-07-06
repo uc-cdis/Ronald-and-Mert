@@ -13,14 +13,14 @@ whole_process <- function(project1, project2="", skip_download = F)
   system(paste("echo Starting > ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
   
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/install_r_prereqs.r")       # from Kevin_R_scripts
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/preprocessing_tool.r")      # "                  "
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/heatmap_dendrogram.r")      # "                  "
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/calculate_pco.r")           # "                  "
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/render_calculated_pcoa.r")  # "                  "
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/GDC_raw_count_merge.vRonald.r") # from ronald_r_scripts
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/get_listof_UUIDs.r")            # "                   "
-  source("/Users/mertbozfakioglu/Documents/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
+  source("~/git/Ronald-and-Mert/install_r_prereqs.r")       # from Kevin_R_scripts
+  source("~/git/Ronald-and-Mert/preprocessing_tool.r")      # "                  "
+  source("~/git/Ronald-and-Mert/heatmap_dendrogram.r")      # "                  "
+  source("~/git/Ronald-and-Mert/calculate_pco.r")           # "                  "
+  source("~/git/Ronald-and-Mert/render_calculated_pcoa.r")  # "                  "
+  source("~/git/Ronald-and-Mert/GDC_raw_count_merge.vRonald.r") # from ronald_r_scripts
+  source("~/git/Ronald-and-Mert/get_listof_UUIDs.r")            # "                   "
+  source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
   library(DESeq)
   
   if(!skip_download)
@@ -35,7 +35,7 @@ whole_process <- function(project1, project2="", skip_download = F)
   # unzips data into .counts files
   system(paste("echo 'Unzipping files' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-
+​
   system("gunzip *.gz")
   }
   system("ls | grep .counts$ > counts_files")
@@ -46,7 +46,7 @@ whole_process <- function(project1, project2="", skip_download = F)
   # merges abundance data together
   system(paste("echo 'Merging Data Files' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-
+​
   GDC_raw_count_merge(id_list="counts_files")
   
   system(paste("echo 'Merge Completed' >> ",project1,".",project2,time,".log",sep=""))
@@ -71,10 +71,10 @@ whole_process <- function(project1, project2="", skip_download = F)
   details <- details[with(details, order(as.POSIXct(mtime))), ]
   metadata_filename <- rownames(details)[length(files)] 
   print(metadata_filename)
-
+​
   system(paste("echo 'Metadata Downloaded' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-
+​
   # normalizing the data
   system(paste("echo 'Preprocessing' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
@@ -91,13 +91,6 @@ whole_process <- function(project1, project2="", skip_download = F)
   
   calculate_pco(file_in = "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
   print(metadata_filename)
-
-  #dir_path <- paste("/mnt/", project1, "_", project2, sep="")
-  #system(paste("mkdir", dir_path))
-  render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", 
-                          metadata_table = metadata_filename,  
-                          use_all_metadata_columns = T, 
-                          mv_to_mount = dir_path)
   
   system(paste("echo 'PCoA Calculated' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
