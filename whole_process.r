@@ -100,7 +100,7 @@ whole_process <- function(project1, project2="", skip_download = F)
   system(paste("echo 'Rendering PCoA' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
   
-  render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", metadata_table = metadata_filename, use_all_metadata_columns = T, mv_to_mount = T)
+  render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", metadata_table = metadata_filename, use_all_metadata_columns = T)
   
   system(paste("echo 'Rendered all PCoA's >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
