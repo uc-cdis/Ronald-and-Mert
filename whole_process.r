@@ -1,4 +1,4 @@
-whole_process <- function(project1, project2="")
+whole_process <- function(project1, project2="", skip_download = F)
 {
   source("~/git/Ronald-and-Mert/install_r_prereqs.r")       # from Kevin_R_scripts
   source("~/git/Ronald-and-Mert/preprocessing_tool.r")      # "                  "
@@ -9,16 +9,19 @@ whole_process <- function(project1, project2="")
   source("~/git/Ronald-and-Mert/get_listof_UUIDs.r")            # "                   "
   source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
   library(DESeq)
- 
-  # downloads data
-  download_project_data(project1)
-  if (project2 != "")
+  
+  if(!skip_download)
   {
- 	download_project_data(project2)
-  }
-
+  	# downloads data
+  	download_project_data(project1)
+  	if (project2 != "")
+  	{
+ 		download_project_data(project2)
+  	}
+  
   # unzips data into .counts files
   system("gunzip *.gz")
+  }
   system("ls | grep .counts$ > counts_files")
   
   # merges abundance data together
