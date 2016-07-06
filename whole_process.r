@@ -46,8 +46,8 @@ whole_process <- function(project1, project2="", skip_download = F)
   calculate_pco(file_in = "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
   print(metadata_filename)
 
-  dir_path <- paste("/mnt/", project1, "_", project2, sep="")
-  system(paste("mkdir", dir_path))
+  #dir_path <- paste("/mnt/", project1, "_", project2, sep="")
+  #system(paste("mkdir", dir_path))
   render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", 
                           metadata_table = metadata_filename,  
                           use_all_metadata_columns = T, 
