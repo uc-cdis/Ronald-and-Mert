@@ -35,7 +35,7 @@ whole_process <- function(project1, project2="", skip_download = F)
   # unzips data into .counts files
   system(paste("echo 'Unzipping files' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-​
+  
   system("gunzip *.gz")
   }
   system("ls | grep .counts$ > counts_files")
@@ -46,7 +46,7 @@ whole_process <- function(project1, project2="", skip_download = F)
   # merges abundance data together
   system(paste("echo 'Merging Data Files' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-​
+  
   GDC_raw_count_merge(id_list="counts_files")
   
   system(paste("echo 'Merge Completed' >> ",project1,".",project2,time,".log",sep=""))
@@ -71,10 +71,10 @@ whole_process <- function(project1, project2="", skip_download = F)
   details <- details[with(details, order(as.POSIXct(mtime))), ]
   metadata_filename <- rownames(details)[length(files)] 
   print(metadata_filename)
-​
+  
   system(paste("echo 'Metadata Downloaded' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-​
+  
   # normalizing the data
   system(paste("echo 'Preprocessing' >> ",project1,".",project2,time,".log",sep=""))
   system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
