@@ -50,7 +50,7 @@ render_calcualted_pcoa <- function(
                             use_all_metadata_columns=FALSE, # option to overide color_column -- if true, plots are generate for all of the metadata columns
                             debug=FALSE,
 
-                            mv_to_mount=FALSE # option to move all files in the folder to the ~/mnt folder
+                            mv_to_mount="" # option to move all files in the folder to the ~/mnt folder
                             )
   
 {
@@ -424,9 +424,9 @@ render_calcualted_pcoa <- function(
                     width_legend, width_figure,
                     title_cex, legend_cex, figure_cex, figure_symbol_cex, bar_cex, bar_vert_adjust, label_points, vert_line, debug
                     )  
-        if(mv_to_mount == T)
+        if(mv_to_mount != "")
         {
-          move_files(path = "/mnt")
+          move_files(path = mv_to_mount)
         }
 
       }
