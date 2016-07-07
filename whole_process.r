@@ -42,8 +42,6 @@ whole_process <- function(projects, skip_download = F)
 		{
 			for(i in projects)
 			{
-			  print(i)
-				readline()
 			  download_project_data(i)
 			}
 		}
