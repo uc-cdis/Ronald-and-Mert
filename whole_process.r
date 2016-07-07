@@ -7,11 +7,10 @@ whole_process <- function(project1, project2="", skip_download = F)
   for(i in seq_len(sink.number())){
     sink(NULL)
   }
-  error_log <- file(paste(project1,".",project2,time,".error.log",sep=""), open="wt")
-  sink(error_log,type="message")
+  log <- file(paste(project1,".",project2,time,".full.log",sep=""), open="wt")
+  sink(log)
   
-  system(paste("echo Starting > ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
+  to_log("START")
   
   source("~/git/Ronald-and-Mert/install_r_prereqs.r")       # from Kevin_R_scripts
   source("~/git/Ronald-and-Mert/preprocessing_tool.r")      # "                  "
@@ -22,7 +21,8 @@ whole_process <- function(project1, project2="", skip_download = F)
   source("~/git/Ronald-and-Mert/get_listof_UUIDs.r")            # "                   "
   source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
   library(DESeq)
-  
+
+  to_log("Downloading data")
   if(!skip_download)
   {
   	# downloads data
@@ -31,82 +31,53 @@ whole_process <- function(project1, project2="", skip_download = F)
   	{
  		download_project_data(project2)
   	}
-  
+  to_log("Download Completed")
   # unzips data into .counts files
-  system(paste("echo 'Unzipping files' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
   
+  to_log("Unzipping")
   system("gunzip *.gz")
   }
   system("ls | grep .counts$ > counts_files")
-  
-  system(paste("echo 'Finished Unzipping' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
+  to_log("Unzipping completed")
   
   # merges abundance data together
-  system(paste("echo 'Merging Data Files' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Merging data")
   GDC_raw_count_merge(id_list="counts_files")
-  
-  system(paste("echo 'Merge Completed' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Merge completed")
   # gets UUIDs of data merged together
-  system(paste("echo 'Exporting UUID's >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Exporting UUID's")
   export_listof_UUIDs(tsv = "counts_files.merged_data.txt")
-  
-  system(paste("echo 'Export Completed >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Export Completed")
   # gets metadata file
-  system(paste("echo 'Getting Metadata' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Getting Metadata")
   get_GDC_metadata("counts_files.merged_data_file_UUIDs", my_rot = "yes")
   files <- list.files()[grep("GDC_METADATA.txt", list.files())]
   details <- file.info(list.files()[grep("GDC_METADATA.txt", list.files())])
   details <- details[with(details, order(as.POSIXct(mtime))), ]
   metadata_filename <- rownames(details)[length(files)] 
   print(metadata_filename)
-  
-  system(paste("echo 'Metadata Downloaded' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Metadata Download Completed")
+
   # normalizing the data
-  system(paste("echo 'Preprocessing' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Preprocessing")
   preprocessing_tool(data_in = "counts_files.merged_data.txt", produce_boxplots = TRUE)
-  
-  system(paste("echo 'Done Preprocessing' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Preprocessing Completed")
   # visualize the data
   #heatmap_dendrogram(file_in = "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
-  system(paste("echo 'Calculating PCoA' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
   
+  to_log("Calculating PCoA")
   calculate_pco(file_in = "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
   print(metadata_filename)
-  
-  system(paste("echo 'PCoA Calculated' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
-  
-  
-  system(paste("echo 'Rendering PCoA' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
-  render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", metadata_table = metadata_filename, use_all_metadata_columns = T)
-  
-  system(paste("echo 'Rendered all PCoA's >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
-  system(paste("echo 'END' >> ",project1,".",project2,time,".log",sep=""))
-  system(paste("echo ",Sys.time()," >> ",project1,".",project2,time,".log",sep=""))
-  
+  to_log("Calculated PCoA")
+  to_log("Rendering PCoA")
+  render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", metadata_table = metadata_filename, use_all_metadata_columns = T, mv_to_mount = T)
+  to_log("Rendering Completed")
+  to_log("END")
   sink()
+}
+
+to_log <- function(message){
+  print(message)
+  print(Sys.time())
+  print(gc(verbose = T,reset = T))
 }
