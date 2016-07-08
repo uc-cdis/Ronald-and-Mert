@@ -1,7 +1,12 @@
-whole_process <- function(projects, skip_download = F)
+whole_process <- function(projects,
+							skip_download = F,
+							skip_to_metadata = F)
 {	
 	#free | grep Mem | awk '{print $3/$2 * 100.0}'
-
+	if(skip_to_metadata = T)
+	{
+		skip_download = T
+	}
 	time <- Sys.time()
 	time <- gsub(" ", "", time, fixed = TRUE)
 
@@ -52,17 +57,20 @@ whole_process <- function(projects, skip_download = F)
 	to_log("Unzipping")
 	system("gunzip *.gz")
 	}
-	system("ls | grep .counts$ > counts_files")
-	to_log("Unzipping completed")
+	if (!skip_to_metadata)
+	{
+		system("ls | grep .counts$ > counts_files")
+		to_log("Unzipping completed")
 
-	# merges abundance data together
-	to_log("Merging data")
-	GDC_raw_count_merge(id_list="counts_files")
-	to_log("Merge completed")
-	# gets UUIDs of data merged together
-	to_log("Exporting UUID's")
-	export_listof_UUIDs(tsv = "counts_files.merged_data.txt")
-	to_log("Export Completed")
+		# merges abundance data together
+		to_log("Merging data")
+		GDC_raw_count_merge(id_list="counts_files")
+		to_log("Merge completed")
+		# gets UUIDs of data merged together
+		to_log("Exporting UUID's")
+		export_listof_UUIDs(tsv = "counts_files.merged_data.txt")
+		to_log("Export Completed")
+	}
 	# gets metadata file
 	to_log("Getting Metadata")
 	get_GDC_metadata("counts_files.merged_data_file_UUIDs", my_rot = "yes")
