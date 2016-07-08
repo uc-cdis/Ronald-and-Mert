@@ -3,7 +3,7 @@ whole_process <- function(projects,
 							skip_to_metadata = F)
 {	
 	#free | grep Mem | awk '{print $3/$2 * 100.0}'
-	if(skip_to_metadata = T)
+	if(skip_to_metadata == T)
 	{
 		skip_download = T
 	}
