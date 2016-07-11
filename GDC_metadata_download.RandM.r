@@ -169,7 +169,7 @@ get_GDC_metadata <- function(id_list, my_rot="no", output="file",  order_rows=TR
             date_tag <- gsub("__", "_", date_tag)
             date_tag <- gsub(":", "-", date_tag)
             #output_name =paste(id_list, ".", date_tag, ".GDC_METADATA.txt", sep="")
-            output_name = gsub(" ", "", paste(id_list, ".", date_tag, ".GDC_METADATA.txt"))
+            output_name = gsub(" ", "", paste(id_list,".GDC_METADATA.txt"))
             if(debug==TRUE){ print(paste("FILE_OUT: ", output_name)) }
             export_data(metadata_matrix, output_name)
         }else{
