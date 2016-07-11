@@ -30,6 +30,7 @@ whole_process <- function(projects,
 	source("~/git/Ronald-and-Mert/GDC_raw_count_merge.vRonald.r") # from ronald_r_scripts
 	source("~/git/Ronald-and-Mert/get_listof_UUIDs.r")            # "                   "
 	source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
+	source("~/git/Ronald-and-Mert/correlate_pcoa.r")
 	library(DESeq)
 
 	if(!skip_download)
@@ -104,6 +105,9 @@ whole_process <- function(projects,
 				use_all_metadata_columns = T)
 		to_log("Rendering Completed")
 	}	
+	to_log("Creating Correlation Matrix")
+	correlate_pcoa("counts_files.merged_data_file_UUIDs.GDC_METADATA.txt","counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA")
+	to_log("Created Correlation Matrix")
 	to_log("END")
 	sink()
 
