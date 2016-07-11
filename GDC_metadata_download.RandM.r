@@ -74,12 +74,22 @@ get_GDC_metadata <- function(id_list, my_rot="no", output="file",  order_rows=TR
         
         ###########CHANGED
 
-        #endpoints <- get_mapping_options() this line is under the library commands inorder to perform it once
+        aendpoints <- get_mapping_options() 
+		# this line is under the library commands inorder to perform it once
         for (endpoint in endpoints){
-            raw_metadata_vector <- c(raw_metadata_vector,flatten_list((metadata_cases(my_id=my_ids[i], dict=endpoint))$data))
+			temp <- vector()
+			for(j in c(1:50)){
+				temp <- metadata_cases(my_id=my_ids[i], dict=endpoint)
+				if(is.atomic(temp))
+					Sys.sleep(10)
+				else
+					break
+			}
+            raw_metadata_vector <- c(raw_metadata_vector,
+								 	flatten_list(temp$data))
         }
 
-        ###########END CHANGED
+		###########END CHANGED
 
         if(debug==TRUE){print("Made it here (2)")}
         
@@ -117,7 +127,7 @@ get_GDC_metadata <- function(id_list, my_rot="no", output="file",  order_rows=TR
             }
             if(debug==TRUE){print("Made it here (3.6)")}
             # place merge code here
-
+			
 
             # Note - merging changes class of metadata_matrix from "matrix" to "data frame"; it's converted back below
             metadata_matrix <- combine_matrices_by_column(matrix1=metadata_matrix, matrix2=sample_metadata_matrix, func_order_rows=order_rows, func_order_columns=order_columns, func_debug=debug)

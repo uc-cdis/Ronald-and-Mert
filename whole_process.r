@@ -1,6 +1,10 @@
+library(RJSONIO)
+library(RCurl)
+
 whole_process <- function(projects,
 							skip_download = F,
-							skip_to_metadata = F)
+							skip_to_metadata = F, 
+							skip_rendering = F)
 {	
 	#free | grep Mem | awk '{print $3/$2 * 100.0}'
 	if(skip_to_metadata == T)
@@ -28,9 +32,9 @@ whole_process <- function(projects,
 	source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
 	library(DESeq)
 
-	to_log("Downloading data")
 	if(!skip_download)
 	{
+		to_log("Downloading data")
 		if((any(file.exists(projects)) == F) == F)
 		{
 			list_of_projects <- vector()
@@ -92,11 +96,14 @@ whole_process <- function(projects,
 	calculate_pco(file_in = "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
 	print(metadata_filename)
 	to_log("Calculated PCoA")
-	to_log("Rendering PCoA")
-	render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", 
-			metadata_table = metadata_filename, 
-			use_all_metadata_columns = T)
-	to_log("Rendering Completed")
+	if(skip_rendering == F)
+	{
+		to_log("Rendering PCoA")
+		render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", 
+				metadata_table = metadata_filename, 
+				use_all_metadata_columns = T)
+		to_log("Rendering Completed")
+	}	
 	to_log("END")
 	sink()
 
@@ -106,4 +113,24 @@ to_log <- function(message){
 	print(message)
 	print(Sys.time())
 	print(gc(verbose = T,reset = F))
+}
+
+individual_analysis <- function()
+{
+	# API call to get list of projects
+	project_list <- fromJSON(getURL("https://gdc-api.nci.nih.gov/projects?fields=project_id&from=1&size=50&sort=project.project_id:asc&pretty=true"))$data$hits
+	for(p in project_list)
+	{
+		# check if folder exists
+		if(!dir.exists(file.path("/mnt/single_projects", p)))
+		{
+			# create folder if it doesn't exist
+			dir.create(file.path("/mnt/single_projects", p))
+			# go into folder and run whole_process()
+			setwd(file.path("/mnt/single_projects", p))
+			whole_process(p, skip_rendering = T)
+			# return back to /mnt
+			setwd("/mnt/single_projects")
+		}
+	}
 }
