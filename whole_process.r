@@ -2,14 +2,14 @@ library(RJSONIO)
 library(RCurl)
 
 whole_process <- function(projects,
-							skip_download = F,
+							skip_to_merging = F,
 							skip_to_metadata = F, 
-							skip_rendering = F)
+							skip_rendering = F, 
+							skip_to_corr_matrix = F)
 {	
-	#free | grep Mem | awk '{print $3/$2 * 100.0}'
 	if(skip_to_metadata == T)
 	{
-		skip_download = T
+		skip_to_merging = T
 	}
 	time <- Sys.time()
 	time <- gsub(" ", "", time, fixed = TRUE)
@@ -33,7 +33,7 @@ whole_process <- function(projects,
 	source("~/git/Ronald-and-Mert/correlate_pcoa.r")
 	library(DESeq)
 
-	if(!skip_download)
+	if(!skip_to_merging)
 	{
 		to_log("Downloading data")
 		if((any(file.exists(projects)) == F) == F)
@@ -125,6 +125,8 @@ individual_analysis <- function()
 	project_list <- fromJSON(getURL("https://gdc-api.nci.nih.gov/projects?fields=project_id&from=1&size=50&sort=project.project_id:asc&pretty=true"))$data$hits
 	for(p in project_list)
 	{
+		#sink(file=NULL)
+		print(p)
 		# check if folder exists
 		if(!dir.exists(file.path("/mnt/single_projects", p)))
 		{
@@ -135,6 +137,27 @@ individual_analysis <- function()
 			whole_process(p, skip_rendering = T)
 			# return back to /mnt
 			setwd("/mnt/single_projects")
+		}
+		# check if it has already downloaded all the data
+		else if(file.exists(file.path("/mnt/single_projects", p, "counts_files.merged_data_file_UUIDs")) & 
+				!file.exists(file.path("/mnt/single_projects", p, "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA")))
+		{
+			setwd(file.path("/mnt/single_projects", p))
+			whole_process(p, skip_rendering = T, skip_to_metadata = T)
+		}
+		temp <- list.files()
+		metadataFile <- temp[grepl("GDC_METADATA.txt$", temp)]
+		if (!is.null(metadataFile) & 
+			 	file.exists(file.path("/mnt/single_projects", p, "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA")) &
+			 	!file.exists(file.path("/mnt/single_projects", p, "cor_summary.txt")))
+		{
+			for(i in metadataFile)
+			# something's still wrong with this part, need to test more
+			{
+				source("~/git/Ronald-and-Mert/correlate_pcoa.r")
+				setwd(file.path("/mnt/single_projects", p))
+				correlate_pcoa(i,"counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA")
+			}
 		}
 	}
 }
