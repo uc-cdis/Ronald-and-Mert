@@ -28,8 +28,8 @@ order_all_matrices <- function()
 		if(file.exists(file.path(dir, "cor_summary.txt")))
 		{
 			print(dir)
-			order_corr_matrix(file.path(dir,"cor_summary_pearson.txt"),p_matrix = "cor_summary_pearson_test.txt")
-			order_corr_matrix(file.path(dir,"cor_summary_spearman.txt"),p_matrix = "cor_summary_spearman_test.txt")
+			order_corr_matrix(file.path(dir,"cor_summary_pearson.txt"),p_matrix = file.path(dir,"cor_summary_pearson_test.txt"))
+			order_corr_matrix(file.path(dir,"cor_summary_spearman.txt"),p_matrix = file.path(dir,"cor_summary_spearman_test.txt"))
 		}
 	}
 }
