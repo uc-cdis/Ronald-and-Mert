@@ -7,7 +7,9 @@ create_frequency_table_for_significant_metadata_fields <- function(sig_meta_fiel
     if(file.exists(file.path(dir, sig_meta_fields_file)))
     {
       print(dir)
-      sig_file <- unlist(read.table(file.path(dir,sig_meta_fields_file),stringsAsFactors = F))
+      if(file.size(file.path(dir,sig_meta_fields_file))>0){
+        sig_file <- unlist(read.table(file.path(dir,sig_meta_fields_file),stringsAsFactors = F))
+      }
       fields <- c(fields,sig_file)
     }
   }
