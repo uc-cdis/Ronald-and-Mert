@@ -10,7 +10,7 @@ script, directory = sys.argv
 
 def find_common_metadata(mydir):
     #nameFilter = "cor_summary_spearman.txt.filtered.PCO:15.r:0.6.p:0.001"
-    nameFilter = "cor_summary_spearman.txt.filtered.PCO:50.r:0.6.p:0.001"
+    nameFilter = "cor_summary_spearman.txt.filtered.PCO:50.r:0.6.p:0.01"
     # get all filter files
     metadataDict = {}
     projDict = {}
@@ -36,8 +36,8 @@ def find_common_metadata(mydir):
                         metadataDict[x[0]].append([project, x[1]])
                     else:
                         metadataDict[x[0]] = [[project, x[1]]]
-    shared = open(os.path.join(mydir, "shared_table.PCO:50.r:0.6.p:0.001.tsv"), 'w')
-    unique = open(os.path.join(mydir, "unique_table.PCO:50.r:0.6.p:0.001.tsv"), 'w')
+    shared = open(os.path.join(mydir, "shared_table.PCO:50.r:0.6.p:0.01.tsv"), 'w')
+    unique = open(os.path.join(mydir, "unique_table.PCO:50.r:0.6.p:0.01.tsv"), 'w')
     sharedWriter = csv.writer(shared, delimiter='\t')
     uniqueWriter = csv.writer(unique, delimiter='\t')
     # write table header
