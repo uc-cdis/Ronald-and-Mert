@@ -1,5 +1,6 @@
 #source("http://bioconductor.org/biocLite.R")
 #biocLite("biomaRt")
+#creates a new file which does not contain genes from the y chromosome based on the counts_files.merged_data.txt file
 library(biomaRt)
 mart<- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
 gene_data <- read.table("counts_files.merged_data.txt",sep = "\t",header = F,stringsAsFactors = F)
