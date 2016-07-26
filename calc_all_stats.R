@@ -42,4 +42,5 @@ create_top_percent_table <- function(yourdir, percent = 10, metadataCol = hits.d
     append(namesVec, substr(proj, 3, len(proj)))
   }
   colnames(topTable) <- namesVec
+  write.table(topTable, file = paste0("top", percent, "percent.", metadataCol, ".tsv"), sep = "\t")
 }
