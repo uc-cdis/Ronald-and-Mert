@@ -18,7 +18,7 @@ extract_top_percent <- function(yourfile, percent = 10) {
   topGenes <- colnames(yourtable)[1:subcolNum]
 }
 
-create_top_percent_table <- function(yourdir, percent = 10, metadataCol = hits.demographic.gender.1) {
+create_top_percent_table <- function(yourdir = '.', percent = 10, metadataCol = "hits.demographic.gender.1") {
   projList <- list.dirs(path=yourdir, recursive = F)
   numProj <- length(projList)
   first <- T
