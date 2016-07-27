@@ -12,6 +12,18 @@ calc_all_stats <- function(yourdir = ".", metadata_column) {
   }
 }
 
+calc_all_stats_rev <- function(yourdir = ".", metadata_column) {
+  for(folder in rev(list.dirs(path=yourdir, recursive = F))) {
+    countsFile <- file.path(folder, "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
+    metadataFilename <- file.path(folder, list.files(path = folder,
+                                                     pattern = ".*METADATA.*"))
+    calc_stats(data_table = countsFile, 
+               metadata_table = metadataFilename,
+               metadata_column = metadata_column,
+               stat_test = "Mann-Whitney-unpaired-Wilcoxon")
+  }
+}
+
 extract_top_percent <- function(yourfile, percent = 10) {
   yourtable <- read.table(file = orderedFile, header = T, sep = "\t", row.names = 1, stringsAsFactors = F)
   subcolNum <- ncol(yourtable) * (percent/100)
