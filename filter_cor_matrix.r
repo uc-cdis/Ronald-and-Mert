@@ -3,8 +3,8 @@ filter_cor_matrix <- function(corr_matrix, p_matrix,r_thresh = 0.7,p_thresh = 0.
 	corr <- read.table(file = corr_matrix, header = T, sep = "\t", row.names = 1)
 	p <- read.table(file = p_matrix, header = T, sep = "\t", row.names = 1)
 	if (pco_thresh < length(corr[1,])){
-		corr <- corr[,1:pco_thresh+1]
-		p <- p[,1:pco_thresh+1]
+		corr <- corr[,1:pco_thresh]
+		p <- p[,1:pco_thresh]
 	}
 	corr.list <- setNames(split(corr, seq(nrow(corr))), rownames(corr))
 	p.list <- setNames(split(p, seq(nrow(p))), rownames(p))
