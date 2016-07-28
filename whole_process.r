@@ -5,7 +5,8 @@ whole_process <- function(projects,
 							skip_to_merging = F,
 							skip_to_metadata = F, 
 							skip_rendering = F, 
-							skip_to_corr_matrix = F)
+							skip_to_corr_matrix = F, 
+                            size_lim = F)
 {	
 	if(skip_to_metadata == T)
 	{
@@ -36,23 +37,34 @@ whole_process <- function(projects,
 	if(!skip_to_merging)
 	{
 		to_log("Downloading data")
-		if((any(file.exists(projects)) == F) == F)
+        # if file of project names is is in the vector
+		if(any(file.exists(projects)))
 		{
-			list_of_projects <- vector()
-				for(i in projects)
-				{
-					list_of_projects <- scan(i, what = "character")
-				}
-			for(i in list_of_projects)
+			vec_of_projects <- vector()
+			for(i in projects)
 			{
-				download_project_data(i)
+				vec_of_projects <- c(vec_of_projects, scan(i, what = "character"))
+			}
+			for(i in vec_of_projects)
+			{
+                if(size_lim) {
+                    download_project_data(i, size_lim = size_lim)
+                }
+                else {
+				    download_project_data(i)
+                }
 			}
 		}
 		else
 		{
 			for(i in projects)
 			{
-			  download_project_data(i)
+              if(size_lim) {
+			    download_project_data(i, size_lim = size_lim)
+              }
+              else {
+                download_project_data(i)
+              }
 			}
 		}
 
