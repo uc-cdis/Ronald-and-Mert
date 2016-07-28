@@ -2,6 +2,8 @@
 #biocLite("biomaRt")
 library(biomaRt)
 
+#extracts the none y chr genes from the .STATS_RESULTS file when sourced
+
 mart<- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
 gene_data <- read.table("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.Mann-Whitney-unpaired-Wilcoxon.hits.demographic.gender.1.STATS_RESULTS.txt",sep = "\t",header = F,stringsAsFactors = F)
 #take the first 10 percent
