@@ -1,5 +1,6 @@
 improve_corr_matrix <- function(corr_matrix, metadata_matrix)
 {
+  # Adds row and column names to the corr_matrix
 	corr <- read.table(file = corr_matrix, header = F, sep = "\t")
 	meta_header <- read.table(file = metadata_matrix, nrows=1, header = F)
 	rownames(corr) <- unlist(meta_header)
