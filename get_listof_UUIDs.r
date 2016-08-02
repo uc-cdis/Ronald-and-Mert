@@ -28,8 +28,8 @@ export_listof_UUIDs <- function(project = "", names = "", tsv = "", size_lim = F
   #   List of UUIDs in a file named *filename*_file_UUIDs
   if (project != "") {
     vector_of_files <- c()
-    if (size) {
-      vector_of_files <- unlist(get_UUIDs_from_project(project, size))
+    if (size_lim) {
+      vector_of_files <- unlist(get_UUIDs_from_project(project))
     } else {
       vector_of_files <- unlist(get_UUIDs_from_project(project))
     }
@@ -56,20 +56,17 @@ export_listof_UUIDs <- function(project = "", names = "", tsv = "", size_lim = F
   }
 }
 
-get_UUIDs_from_project <- function(project, size_lim = 99999) { 
+get_UUIDs_from_project <- function(project) { 
   # Gets a list of UUIDs from a project id
   #
   # Args: 
   #   project: project id
-  #   size_lim: limit for number of files to download from each project
   #
   # Returns: 
   #   Vector of all UUIDs
-  before_id=paste0("https://gdc-api.nci.nih.gov/files?fields=file_id&size=", 
-                   size, 
-                   "&pretty=true&filters=%7B%0A%09%22op%22%3A%22and%22%2C%0A%09%22content%22%3A%5B%7B%0A%09%09%22op%22%3A%22%3D%22%2C%0A%09%09%22content%22%3A%7B%0A%09%09%09%22field%22%3A%22analysis.workflow_type%22%2C%0A%09%09%09%22value%22%3A%5B%0A%09%09%09%09%22HTSeq%20-%20Counts%22%0A%09%09%09%5D%0A%09%09%7D%0A%09%7D%2C%20%7B%0A%09%09%22op%22%3A%22%3D%22%2C%0A%09%09%22content%22%3A%7B%0A%09%09%09%22field%22%3A%22cases.project.project_id%22%2C%0A%09%09%09%22value%22%3A%5B%0A%09%09%09%22")
+  before_id="https://gdc-api.nci.nih.gov/files?fields=file_id&size=99999&pretty=true&filters=%7B%0A%09%22op%22%3A%22and%22%2C%0A%09%22content%22%3A%5B%7B%0A%09%09%22op%22%3A%22%3D%22%2C%0A%09%09%22content%22%3A%7B%0A%09%09%09%22field%22%3A%22analysis.workflow_type%22%2C%0A%09%09%09%22value%22%3A%5B%0A%09%09%09%09%22HTSeq%20-%20Counts%22%0A%09%09%09%5D%0A%09%09%7D%0A%09%7D%2C%20%7B%0A%09%09%22op%22%3A%22%3D%22%2C%0A%09%09%22content%22%3A%7B%0A%09%09%09%22field%22%3A%22cases.project.project_id%22%2C%0A%09%09%09%22value%22%3A%5B%0A%09%09%09%22"
   after_id="%22%0A%09%09%09%5D%0A%09%09%7D%0A%09%7D%5D%0A%7D"
-  my_call <- gsub(" ", "", paste(before_id, project, after_id))
+  my_call <- paste0(before_id, project, after_id)
   my_call.json <- fromJSON(getURL(my_call))
   return(my_call.json$data$hits)
 }
@@ -110,7 +107,7 @@ get_UUIDs_from_names <- function(names_list) {
   UUID_list <- vector()
   for (i in 1:length(names_list)) {
   	print(i)
-    my_call <- gsub(" ", "", paste(before_id, names_list[i], after_id))
+    my_call <- paste0(before_id, names_list[i], after_id)
     my_call.json <- fromJSON(getURL(my_call))
     UUID_list <- c(UUID_list, my_call.json$data$hits)
 
@@ -128,7 +125,7 @@ get_names_list_from_tsv <- function(file) {
   return(colnames(my.table))
 }
 
-download_project_data <- function(project, size_lim = 99999) {
+download_project_data <- function(project, size_lim = F) {
   # download HTSeq Counts data for a given project
   # 
   # Args:
@@ -138,9 +135,12 @@ download_project_data <- function(project, size_lim = 99999) {
   # Returns:
   #   (None)
   #   Downloads all HTSeq Counts files as *.gz, need to unzip
-  vector_of_files <- unlist(get_UUIDs_from_project(project, size_lim))
+  vector_of_files <- unlist(get_UUIDs_from_project(project))
+  if(size_lim) {
+    vector_of_files <- vector_of_files[sample(1:length(vector_of_files), size_lim)]
+  }
   for(j in 1:length(vector_of_files)) {
-    print(j)
+    print(paste0(j, ": ", vector_of_files[j]))
     system(paste("curl --remote-name --remote-header-name 'https://gdc-api.nci.nih.gov/data/", 
                  vector_of_files[j],
                  "'",

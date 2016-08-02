@@ -7,7 +7,10 @@ library(dplyr)
 
 get_y_freq_from_gene_df <- function(gene_df){
   mart<- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
-  gene_df <- read.table(file = gene_df,sep = "\t",stringsAsFactors = F,fill = T)
+  gene_df <- read.table(file = gene_df,
+                        sep = "\t",
+                        stringsAsFactors = F,
+                        fill = T)
   result <- NULL
   colnames(gene_df) <- gene_df[1,]
   y_list <- c()

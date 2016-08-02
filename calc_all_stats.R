@@ -54,26 +54,30 @@ create_top_percent_table <- function(yourdir = '.') {
   topTable <- matrix()
   for(folder in projList) {
     # CHANGE FILE NAME HERE FOR AFTER REMOVING Y CHROMOSOME GENES
-    countsFile <- file.path(folder, paste0("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.Mann-Whitney-unpaired-Wilcoxon.", 
-                                           metadataCol, 
-                                           ".STATS_RESULTS.txt"))
+    countsFile <- file.path(folder, paste0("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.Mann-Whitney-unpaired-Wilcoxon.hits.demographic.gender.1.STATS_RESULTS.edit.txt"))
     if(!file.exists(countsFile)) {
       calc_all_stats(yourdir, metadataCol)
     }
+    gene.names = row.names(read.table(file = countsFile, header = T, sep = '\t', row.names = 1, stringsAsFactors = T))
+    
     if(first) {
       # create large matrix so no need to cbind for efficiency 
       #   (not actually sure if this helps at all)
-      # hard coded in 1000 because I don't know a better way to do it
-      topTable <- matrix(NA, ncol = numProj, nrow = length(top_percent) + 1000)
+      # hard coded in 1000 because I don't know a better way to correct for variable
+      # number of genes
+      topTable <- matrix(NA, ncol = numProj, nrow = length(gene.names) + 1000)
+      colnames(topTable) <- projList
       first <- F
     }
-    topTable[1:length(top_percent),folder] <- top_percent
+    topTable[1:length(gene.names),folder] <- gene.names
   }
   # add colnames to topTable
   namesVec <- c()
   for(proj in projList) {
-    append(namesVec, substr(proj, 3, len(proj)))
+    browser()
+    namesVec <- c(namesVec, substr(proj, 3, nchar(proj)))
   }
   colnames(topTable) <- namesVec
-  write.table(topTable, file = paste0("top", percent, "percent.", metadataCol, ".tsv"), sep = "\t")
+  topTable <- topTable[rowSums(is.na(topTable)) != ncol(topTable),]
+  write.table(topTable, file = "summary_table_for_important_genes.tsv", sep = "\t", row.names = F)
 }
