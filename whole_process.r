@@ -11,7 +11,7 @@ whole_process <- function(projects, # use files with project_ids or a vector
                           # size_lim for every project: only downloads XX 
                           # number of files per project if XX files are
                           # available
-                          size_lim = F
+                          size_lim = F, 
                           # option to render heatmap dendrogram
                           heatmap_option = F) {	
 
@@ -114,7 +114,7 @@ whole_process <- function(projects, # use files with project_ids or a vector
 	to_log("Preprocessing Completed")
 	# visualize the data
   # generate heatmap dendrogram
-  if (heatmap_option = T) {
+  if (heatmap_option == T) {
 	  heatmap_dendrogram(file_in = "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt")
   }
 

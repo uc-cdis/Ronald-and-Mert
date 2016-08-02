@@ -136,7 +136,7 @@ download_project_data <- function(project, size_lim = F) {
   #   (None)
   #   Downloads all HTSeq Counts files as *.gz, need to unzip
   vector_of_files <- unlist(get_UUIDs_from_project(project))
-  if(size_lim) {
+  if(size_lim && size_lim < length(vector_of_files)) {
     vector_of_files <- vector_of_files[sample(1:length(vector_of_files), size_lim)]
   }
   for(j in 1:length(vector_of_files)) {
