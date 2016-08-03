@@ -14,7 +14,7 @@
 # It always requires a *.PCoA file (like that produce by AMETHST/plot_pco.r)
 # It can handle metadata as a table - producing plots for all or selected metadata columns (metadata used to generate colors automatically)
 # It can handle an amthst groups file as metadata (metadata used to generate colors automatically)
-# It can handle a list of colors - using them to pain the points directly
+# It can handle a list of colors - using them to paint the points directly
 # It can handle the case when there is no metadata - painting all of points the same
 # users can also specify a pch table to control the shape of plotted icons (this feature may not be ready yet)
 # CHANGE OVER v12 - you can select which samples (rows in the eigen vector matrix) with "plot_samples" variable
@@ -1111,7 +1111,12 @@ create_plot <- function(
 # adapted from https://stat.ethz.ch/pipermail/r-help/2002-May/022037.html 
 ######################
 col.wheel <- function(num_col, my_cex=0.75) {
-  cols <- rainbow(num_col)
+  if (!require("RColorBrewer")) {
+    install.packages("RColorBrewer")
+    library(RColorBrewer)
+  }
+  cols <- colorRampPalette(brewer.pal(12, "Paired"))(num_col)
+  #cols <- rainbow(num_col)
   col_names <- vector(mode="list", length=num_col)
   for (i in 1:num_col){
     col_names[i] <- getColorTable(cols[i])

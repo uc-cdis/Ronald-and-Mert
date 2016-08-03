@@ -65,7 +65,7 @@ get_GDC_metadata <- function(id_list, my_rot="no", output="file",  order_rows=TR
     for (i in 1:length(my_ids)){
         
         #if(verbose==TRUE){print(paste("Processing sample (", i, ")"))}
-        print(paste("Processing sample (", i, ")"))
+        print(paste("Processing sample (", i, ":", my_ids[i], ")"))
 
         raw_metadata_vector <- vector()
         unique_metadata_vector <- vector
