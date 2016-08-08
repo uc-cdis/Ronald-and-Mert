@@ -29,14 +29,19 @@ FindSignificantCancer <- function(data.filename, metadata.filename,
   ensembl.ids <- c()
   for (g in gene) {
     if (suppressWarnings(is.na(as.numeric(g)))) {
-      ensembl.ids <- g
+      ensembl.ids <- c(ensembl.ids, g)
     } else {
-      ensembl.ids <- rownames(data.table)[g]
+      ensembl.ids <- c(ensembl.ids, rownames(data.table)[g])
     }
   }
+  gene.name.table <- data.frame()
   if (convert) {
     source("convert_ensembl_to_name.R")
-    gene.name.table <- ConvertEnsemblToName(ensembl.ids)
+    ensembl.ids.sans.ending <- c()
+    for (x in strsplit(ensembl.ids, "\\.")) {
+      ensembl.ids.sans.ending <- c(ensembl.ids.sans.ending, x[1])
+    }
+    gene.name.table <- ConvertEnsemblToName(ensembl.ids.sans.ending)
   }
   for (g in ensembl.ids) {
     dunn.test.results <- dunn.test(as.numeric(data.table[g,]), 
@@ -48,18 +53,18 @@ FindSignificantCancer <- function(data.filename, metadata.filename,
     p.values.ordered <- p.values.ordered[order(p.values.ordered)]
     filtered.p.values <- p.values.ordered[p.values.ordered < alpha.level]
     names.vec <- c()
-    for (name in names(lowest.p.values)) {
+    for (name in names(filtered.p.values)) {
       names.vec <- c(names.vec, unlist(strsplit(name, " - ")))
     }
     names.count.table <- as.data.frame(table(names.vec))
     names.count.table <- names.count.table[order(names.count.table[[2]], decreasing = T), ]
     if(convert) {
-      write(gene.name.table, paste(gene.name, "significant.cancers", sep = "."), sep = "\t")
+      write(gene.name.table, paste(g, "significant.cancers", sep = "."), sep = "\t")
     } else {
-      write(g, paste(gene.name, "significant.cancers", sep = "."))
+      write(g, paste(g, "significant.cancers", sep = "."))
     }
     write.table(names.count.table, 
-                file = paste(gene.name, "significant.cancers", sep = "."),
+                file = paste(g, "significant.cancers", sep = "."),
                 sep = "\t",
                 row.names = F,
                 append = T)
