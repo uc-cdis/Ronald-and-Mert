@@ -36,7 +36,7 @@ FindSignificantCancer <- function(data.filename, metadata.filename,
   }
   gene.name.table <- data.frame()
   if (convert) {
-    source("convert_ensembl_to_name.R")
+    source("~/git/Ronald-and-Mert/convert_ensembl_to_name.R")
     ensembl.ids.sans.ending <- c()
     for (x in strsplit(ensembl.ids, "\\.")) {
       ensembl.ids.sans.ending <- c(ensembl.ids.sans.ending, x[1])
@@ -59,7 +59,9 @@ FindSignificantCancer <- function(data.filename, metadata.filename,
     names.count.table <- as.data.frame(table(names.vec))
     names.count.table <- names.count.table[order(names.count.table[[2]], decreasing = T), ]
     if(convert) {
-      write(gene.name.table, paste(g, "significant.cancers", sep = "."), sep = "\t")
+      write.table(gene.name.table[which(gene.name.table[["ensembl_gene_id"]] == strsplit(g, "\\.")[[1]][1]),],
+                  paste(g, "significant.cancers", sep = "."), sep = "\t",
+                  row.names = F, col.names = F)
     } else {
       write(g, paste(g, "significant.cancers", sep = "."))
     }
