@@ -1,3 +1,5 @@
+library(tools)
+
 FilterStats <- function(filename, percent = .01, exclude.y = F, fdr.cutoff = F) {
   gene_data <- read.table(filename,
                           sep = "\t",
@@ -26,7 +28,7 @@ FilterStats <- function(filename, percent = .01, exclude.y = F, fdr.cutoff = F) 
     gene_data <- gene_data[!check,]
   }
   write.table(gene_data,
-              paste0(file_path_sans_ext(filename), "filtered", file_ext(filename)),
+              paste(file_path_sans_ext(filename), "filtered", file_ext(filename), sep = "."),
               sep = "\t",
               col.names = T,
               row.names = F,
