@@ -1115,12 +1115,15 @@ col.wheel <- function(num_col, my_cex=0.75) {
     install.packages("RColorBrewer")
     library(RColorBrewer)
   }
-  if (num_col > 12) {
+  if (num_col > 24) {
     cols <- colorRampPalette(brewer.pal(12, "Paired"))(ceiling(num_col/2))
     cols <- c(cols, colorRampPalette(brewer.pal(12, "Set3"))(num_col - length(cols)))
     #cols <- rainbow(num_col)
+  } else if (num_col > 12) {
+    cols <- colorRampPalete(brewer.pal(ceiling(num_col/2), "Paired"))
+    cols <- c(cols, colorRampPalette(brewer.pal(floor(num_col/2), "Set3")))
   } else {
-    cols <- colorRampPalette(brewer.pal(12, "Paired"))(num_col)
+    cols <- colorRampPalette(brewer.pal(num_col, "Paired"))
   }
   col_names <- vector(mode="list", length=num_col)
   for (i in 1:num_col){
