@@ -5,6 +5,8 @@ source("~/git/Ronald-and-Mert/preprocessing_tool.r")
 source("~/git/Ronald-and-Mert/GDC_raw_count_merge.vRonald.r")
 source("~/git/Ronald-and-Mert/heatmap_dendrogram.r")
 source("~/git/Ronald-and-Mert/GDC_metadata_download.RandM.r")
+source("~/git/Ronald-and-Mert/calc_stats.r")
+source("~/git/Ronald-and-Mert/render_calculated_pcoa.r")
 library(DESeq)
 
 CompareNormalCancerPipeline <- function(projects) {
