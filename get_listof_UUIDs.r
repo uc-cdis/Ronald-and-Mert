@@ -13,7 +13,7 @@ library(RJSONIO)
 library(RCurl)
 library(tools)
 
-export_listof_UUIDs <- function(project = "", names = "", tsv = "", size_lim = F) {
+export_listof_UUIDs <- function(project = "", names = "", tsv = "", scan_file = "", size_lim = F) {
   # creates a list of UUIDs
   # 
   # Args:
@@ -51,6 +51,11 @@ export_listof_UUIDs <- function(project = "", names = "", tsv = "", size_lim = F
     write(unlist(get_UUIDs_from_names(names_list)), 
           paste(file_path_sans_ext(tsv),"file_UUIDs",sep="_"), 
           sep = "\n")
+  } else if (scan_file != "") {
+    names_list <- scan(file=scan_file, what="character")
+    write(unlist(get_UUIDs_from_names(names_list)), 
+          paste(file_path_sans_ext(scan_file),"file_UUIDs",sep="_"), 
+          sep = "\n") 
   } else {
     print("Error: no argument given to function")
   }
