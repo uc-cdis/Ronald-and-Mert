@@ -1,6 +1,11 @@
 # Metadata retrieval test
 
-# source libraries
+                                        # source libraries
+# nice method to check if package is installed, install it if not, then source it # Kevin 11-17-16
+if ( is.element("RJSONIO", installed.packages()[,1]) == FALSE ){ install.packages("RJSONIO") }
+if ( is.element("RCurl", installed.packages()[,1]) == FALSE ){ install.packages("RCurl") }
+if ( is.element("matlab", installed.packages()[,1]) == FALSE ){ install.packages("matlab") }
+
 library(RJSONIO)
 library(RCurl)
 library(matlab)

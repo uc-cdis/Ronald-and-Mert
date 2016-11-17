@@ -1,13 +1,6 @@
-# nice method to check if package is installed, install it if not, then source it # Kevin 11-17-16
-if ( is.element("biomaRt", installed.packages()[,1]) == FALSE ){
-    source("http://bioconductor.org/biocLite.R")
-    biocLite(biomaRt)
-}
-library(biomaRt)
-
-#source("http://bioconductor.org/biocLite.R")
+q#source("http://bioconductor.org/biocLite.R")
 #biocLite("biomaRt")
-#library(biomaRt)
+library(biomaRt)
 
 #extracts the non y chr genes from the .STATS_RESULTS file when sourced
 exclude_y <- function() {

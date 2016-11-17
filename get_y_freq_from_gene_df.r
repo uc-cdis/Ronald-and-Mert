@@ -1,5 +1,18 @@
+# nice method to check if package is installed, install it if not, then source it # Kevin 11-17-16
+if ( is.element("biomaRt", installed.packages()[,1]) == FALSE ){
+    source("http://bioconductor.org/biocLite.R")
+    biocLite("biomaRt")
+}
 library(biomaRt)
+
+if ( is.element("dplyr", installed.packages()[,1]) == FALSE ){ install.packages("dplyr") }
 library(dplyr)
+
+#source("http://bioconductor.org/biocLite.R")
+#biocLite(biomaRt)
+#library(biomaRt)
+#install.packages(dplyr)
+#library(dplyr)
 
 #creates a frequency table of y genes by project name
 #input: data frame with project names as column names and gene ID's under corresponding project names
