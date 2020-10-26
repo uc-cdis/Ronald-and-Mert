@@ -1,7 +1,7 @@
 AddTumorOrNormCol <- function(metadata.file = "", normal.filenames = "", tumor.filenames = "") {
   metadata.table <- read.table(file = "metadata.file",
       row.names = 1,header = TRUE,sep = "\t",
-      colClasses = "character", check.names = FALSE,comment.char = "", 
+      colClasses = "character", check.names = FALSE,comment.char = "",
       fill = TRUE, blank.lines.skip = FALSE)
   normal.files <- readLines(normal.filenames)
   tumor.files <- readLines(tumor.filenames)
@@ -24,6 +24,6 @@ AddTumorOrNormCol <- function(metadata.file = "", normal.filenames = "", tumor.f
     }
   }
   metadata.table <- cbind(metadata.table, normal.or.tumor.col)
-  write.table(metadata.table, file = paste0(metadata.file, ".sampleidcol"), 
+  write.table(metadata.table, file = paste0(metadata.file, ".sampleidcol"),
       sep = "\t", quote = F, col.names = NA, row.names = T)
 }

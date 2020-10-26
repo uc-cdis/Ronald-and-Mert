@@ -1,11 +1,11 @@
 CompareFPKM <- function(FPKM.file.name, reference.file.name, tissue.col) {
   FPKM <- read.table(FPKM.file.name, row.names=1,
-                            header=TRUE, sep="\t", colClasses = "character", 
-                            check.names=FALSE,comment.char = "", 
+                            header=TRUE, sep="\t", colClasses = "character",
+                            check.names=FALSE,comment.char = "",
                             fill=TRUE, blank.lines.skip=FALSE)
   reference <- read.table(reference.file.name, row.names=1,
-                            header=TRUE, sep="\t", colClasses = "character", 
-                            check.names=FALSE,comment.char = "", 
+                            header=TRUE, sep="\t", colClasses = "character",
+                            check.names=FALSE,comment.char = "",
                             fill=TRUE, blank.lines.skip=FALSE)
   rownames(FPKM) <- unlist(strsplit(rownames(FPKM), "\\."))[(1:nrow(FPKM))*2-1]
   result.frame <- data.frame(matrix(NA, nrow = nrow(reference), 3))
@@ -20,8 +20,8 @@ CompareFPKM <- function(FPKM.file.name, reference.file.name, tissue.col) {
     result.frame[r, 2] <- result$estimate
     result.frame[r, 1] <- reference[r, tissue.col]
   }
-  ordered.result.frame <- result.frame[order(result.frame[["p-value"]], 
+  ordered.result.frame <- result.frame[order(result.frame[["p-value"]],
                                              -abs(as.numeric(result.frame[["reference"]]) - as.numeric(result.frame[["estimate"]]))), ]
-  write.table(ordered.result.frame, file = "different_genes.txt", 
+  write.table(ordered.result.frame, file = "different_genes.txt",
               sep = "\t", quote = F, col.names = NA, row.names = T)
 }

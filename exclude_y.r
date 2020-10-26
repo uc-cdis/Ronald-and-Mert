@@ -24,7 +24,7 @@ exclude_y <- function() {
   ensembl_genes<- gsub( "\\..*", "", gene_data[,1] )
   #map gene ID to chr
   result <- getBM(
-    filters= "ensembl_gene_id", 
+    filters= "ensembl_gene_id",
     attributes= c("ensembl_gene_id","chromosome_name"),
     values= ensembl_genes,
     mart= mart)

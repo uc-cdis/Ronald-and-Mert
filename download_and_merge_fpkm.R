@@ -5,12 +5,12 @@ DownloadAndMergeFPKM <- function(projects, # use files with project_ids or a vec
                           # of project_ids
                           # parameters to skip certain parts of script
                           skip_to_merging = F,
-                          # size_lim for every project: only downloads XX 
+                          # size_lim for every project: only downloads XX
                           # number of files per project if XX files are
                           # available
-                          size_lim = F) {	
+                          size_lim = F) {
   # from Kevin_R_scripts
-  source("~/git/Ronald-and-Mert/install_r_prereqs.r")       
+  source("~/git/Ronald-and-Mert/install_r_prereqs.r")
   # from Ronald-and-Mert
   source("~/git/Ronald-and-Mert/GDC_raw_count_merge.stripped.R")
   source("~/git/Ronald-and-Mert/remove_FPKM_file_endings.R")
@@ -56,9 +56,9 @@ DownloadAndMergeFPKM <- function(projects, # use files with project_ids or a vec
 
 download_project_data <- function(project, size_lim = F) {
   # download HTSeq Counts data for a given project
-  # 
+  #
   # Args:
-  #   project: vector of files that contain project_ids or 
+  #   project: vector of files that contain project_ids or
   #            a vector of projects
   #
   # Returns:
@@ -70,20 +70,20 @@ download_project_data <- function(project, size_lim = F) {
   }
   for(j in 1:length(vector_of_files)) {
     print(paste0(j, ": ", vector_of_files[j]))
-    system(paste("curl --remote-name --remote-header-name 'https://gdc-api.nci.nih.gov/data/", 
+    system(paste("curl --remote-name --remote-header-name 'https://gdc-api.nci.nih.gov/data/",
                  vector_of_files[j],
                  "'",
                  sep=""))
   }
 }
 
-get_UUIDs_from_project <- function(project) { 
+get_UUIDs_from_project <- function(project) {
   # Gets a list of UUIDs from a project id
   #
-  # Args: 
+  # Args:
   #   project: project id
   #
-  # Returns: 
+  # Returns:
   #   Vector of all UUIDs
   before_id="https://gdc-api.nci.nih.gov/files?fields=file_id&size=99999&pretty=true&filters=%7B%0D%0A++%22op%22%3A%22and%22%2C%0D%0A++%22content%22%3A%5B%7B%0D%0A++++%22op%22%3A%22%3D%22%2C%0D%0A++++%22content%22%3A%7B%0D%0A++++++%22field%22%3A%22analysis.workflow_type%22%2C%0D%0A++++++%22value%22%3A%5B%0D%0A++++++++%22HTSeq+-+FPKM%22%0D%0A++++++++%5D%0D%0A++++%7D%0D%0A++%7D%2C+%7B%0D%0A++++%22op%22%3A%22%3D%22%2C%0D%0A++++%22content%22%3A%7B%0D%0A++++++%22field%22%3A%22cases.project.project_id%22%2C%0D%0A++++++%22value%22%3A%5B%0D%0A++++++++%22"
   after_id="%22%0D%0A++++++++%5D%0D%0A++++%7D%0D%0A++%7D%5D%0D%0A%7D"
@@ -114,6 +114,6 @@ DownloadAllFPKM <- function(overall.path = "/mnt/FPKM") {
       DownloadAndMergeFPKM(p)
       # return back to /mnt
       setwd(overall.path)
-    } 
+    }
   }
 }

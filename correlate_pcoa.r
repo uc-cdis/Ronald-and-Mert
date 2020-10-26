@@ -15,7 +15,7 @@ correlate_pcoa <- function(metadata_file,pcoa_file){
     meta[,col_names] <- lapply(meta[,col_names],as.numeric)
     return(meta)
   }
-  
+
   my_metadata <- import_metadata_v2(metadata_file)
   my_pcoa <- load_pcoa_data(pcoa_file)
   #create empty matrices with correct sizes
@@ -23,7 +23,7 @@ correlate_pcoa <- function(metadata_file,pcoa_file){
   cor_summary_matrix_spearman <- matrix(NA,ncol(my_metadata),ncol(my_pcoa$eigen_vectors))
   cor_summary_matrix_pearson_test<- matrix(NA,ncol(my_metadata),ncol(my_pcoa$eigen_vectors))
   cor_summary_matrix_spearman_test<- matrix(NA,ncol(my_metadata),ncol(my_pcoa$eigen_vectors))
-  
+
   for(i in 1:ncol(my_metadata)){
     for(j in 1:ncol(my_pcoa$eigen_vectors)){
       #fill the cor matricies

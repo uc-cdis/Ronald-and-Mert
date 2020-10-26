@@ -11,11 +11,11 @@ AppendMeanAndMedian <- function(filename) {
                         fill=TRUE,
                         blank.lines.skip=FALSE,
                         stringsAsFactors = F)
-  newtable <- cbind(mytable, 
-                    rowMeans(data.matrix(mytable), na.rm = T), 
-                    apply(mytable, 1, median, na.rm = T), 
+  newtable <- cbind(mytable,
+                    rowMeans(data.matrix(mytable), na.rm = T),
+                    apply(mytable, 1, median, na.rm = T),
                     stringsAsFactors = F)
-  newtable <- cbind(newtable, as.numeric(newtable[[ncol(newtable) - 1]]) - as.numeric(newtable[[ncol(newtable)]]), 
+  newtable <- cbind(newtable, as.numeric(newtable[[ncol(newtable) - 1]]) - as.numeric(newtable[[ncol(newtable)]]),
                     stringsAsFactors = F)
   colnames(newtable) <- c(colnames(newtable)[1:(ncol(newtable)-3)], "mean", "median", "mean-median")
   byMedian <- newtable[order(newtable[["median"]], decreasing = T), ]

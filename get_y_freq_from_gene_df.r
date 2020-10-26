@@ -33,7 +33,7 @@ get_y_freq_from_gene_df <- function(gene_df){
 
     print(col[1])
     result <- getBM(
-      filters= "ensembl_gene_id", 
+      filters= "ensembl_gene_id",
       attributes= c("ensembl_gene_id","chromosome_name"),
       values= ensembl_genes,
       mart= mart)

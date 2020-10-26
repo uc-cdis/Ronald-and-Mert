@@ -1,4 +1,4 @@
-filter_cor_p_matrix <- function(corr_matrix, 
+filter_cor_p_matrix <- function(corr_matrix,
                                 p_matrix,
                                 r_thresh = 0.7,
                                 p_thresh = 0.0001,
@@ -17,7 +17,7 @@ filter_cor_p_matrix <- function(corr_matrix,
   # Returns:
   #   (None)
   #   Exports a table with metadata as rows and information about the data
-  #   that passed the filter: 
+  #   that passed the filter:
   #   Metadata  PCO.#:r-value:p-value
   corr <- read.table(file = corr_matrix, header = T, sep = "\t", row.names = 1)
   p <- read.table(file = p_matrix, header = T, sep = "\t", row.names = 1)
@@ -35,7 +35,7 @@ filter_cor_p_matrix <- function(corr_matrix,
 
   b <- mapply(function(fromc, fromp) {
               # Takes in the data frame from corr.list and p.list for a piece of metadata
-              # and then spits out a filtered vector that's ordered based on the magnitude 
+              # and then spits out a filtered vector that's ordered based on the magnitude
               # of the correlation value
               # mapply returns these vectors as a list
               fromc[is.na(fromc)] <- 0
@@ -66,8 +66,8 @@ filter_cor_p_matrix <- function(corr_matrix,
   index <- 1
   lapply(b, function(elem) {
          # write elements of b line by line
-         write(append(elem, namesList[index], 0), 
-               file = paste0(corr_matrix, file_name,".pass_num:",l), 
+         write(append(elem, namesList[index], 0),
+               file = paste0(corr_matrix, file_name,".pass_num:",l),
                sep = "\t", ncolumns=1000, append=T)
          index <<- index + 1
                                 })
@@ -76,17 +76,17 @@ filter_cor_p_matrix <- function(corr_matrix,
 filter_all_matrices <- function(pco_test = c(15),
                                 p_test = c(0.0001),
                                 r_test = c(0.7)) {
-  # Filters the correlation and p-value matrices for every combination of 
+  # Filters the correlation and p-value matrices for every combination of
   # filters specified
-  # 
-  # Args: 
+  #
+  # Args:
   #   pco_test: Vector of all desired principal component filters
   #   p_test: Vector of all desired p-value filters
   #   r_test: Vector of all desired r-value filters
   #
   # Returns:
   #   (None)
-  #   Exports two (pearson and spearman) files each with a table that contains 
+  #   Exports two (pearson and spearman) files each with a table that contains
   #   information about which pieces of metadata passed the filter in a file
   #   ending with ".filtered.PCO:#.r:#.p:#.pass_num:#
   for(dir in list.dirs()) {
@@ -95,7 +95,7 @@ filter_all_matrices <- function(pco_test = c(15),
       for (pco in pco_test) {
         for (p in p_test) {
           for (r in r_test) {
-            filter_cor_p_matrix(corr_matrix = file.path(dir,"cor_summary_pearson.txt"), 
+            filter_cor_p_matrix(corr_matrix = file.path(dir,"cor_summary_pearson.txt"),
                                 p_matrix = file.path(dir,"cor_summary_pearson_test.txt"),
                                 pco_thresh = pco,
                                 r_thresh = r,
@@ -103,8 +103,8 @@ filter_all_matrices <- function(pco_test = c(15),
                                 file_name = paste0(".filtered.",
                                                    "PCO:",pco,
                                                    ".r:",r,
-                                                   ".p:",p))                                                   
-            filter_cor_p_matrix(corr_matrix = file.path(dir,"cor_summary_spearman.txt"), 
+                                                   ".p:",p))
+            filter_cor_p_matrix(corr_matrix = file.path(dir,"cor_summary_spearman.txt"),
                                 p_matrix = file.path(dir,"cor_summary_spearman_test.txt"),
                                 pco_thresh = pco,
                                 r_thresh = r,

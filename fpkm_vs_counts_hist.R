@@ -3,11 +3,11 @@ library(ggplot2)
 FPKMVsCountsPlot <- function(fpkm.merged.filename, counts.merged.filename) {
   fpkm.table <- read.table(file = fpkm.merged.filename,
                            row.names = 1,header = TRUE,sep = "\t",
-                           colClasses = "character", check.names = FALSE,comment.char = "", 
+                           colClasses = "character", check.names = FALSE,comment.char = "",
                            fill = TRUE, blank.lines.skip = FALSE)
   counts.table <- read.table(file = counts.merged.filename,
                              row.names = 1,header = TRUE,sep = "\t",
-                             colClasses = "character", check.names = FALSE,comment.char = "", 
+                             colClasses = "character", check.names = FALSE,comment.char = "",
                              fill = TRUE, blank.lines.skip = FALSE)
   counts <- c()
   fpkm <- c()

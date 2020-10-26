@@ -17,8 +17,8 @@ calc_all_stats <- function(yourdir = ".", metadata_column, start = 1) {
   projlist <- list.dirs(path = yourdir, recursive = F)
   for(folder in projlist[start:length(projlist)]) {
     print(paste0("calculating stats for ", folder))
-    if(file.exists(file.path(folder, paste0("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.Mann-Whitney-unpaired-Wilcoxon.", 
-                                            metadata_column, 
+    if(file.exists(file.path(folder, paste0("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.Mann-Whitney-unpaired-Wilcoxon.",
+                                            metadata_column,
                                             ".STATS_RESULTS.txt")))) {
       # if the STATS_RESULTS.txt file exists already, skip this folder
       next
@@ -29,7 +29,7 @@ calc_all_stats <- function(yourdir = ".", metadata_column, start = 1) {
     tryCatch({
       # tryCatch to stop everything from stopping if running into an error
       # should probably add error logging at a later time
-      calc_stats(data_table = countsFile, 
+      calc_stats(data_table = countsFile,
                  metadata_table = metadataFilename,
                  metadata_column = metadata_column,
                  stat_test = "Mann-Whitney-unpaired-Wilcoxon")
@@ -38,16 +38,16 @@ calc_all_stats <- function(yourdir = ".", metadata_column, start = 1) {
 }
 
 create_top_percent_table <- function(yourdir = '.') {
-  # Exports a summary tsv for every project using gene expression files 
+  # Exports a summary tsv for every project using gene expression files
   #
   # Args:
   #   yourdir: directory that contains all subdirectories of each individual
-  #            project. 
+  #            project.
   #
   # Returns:
   #   (None)
   #   Exports table with project ids as column names and the genes that
-  #   are associated with said project in its column. 
+  #   are associated with said project in its column.
   projList <- list.dirs(path=yourdir, recursive = F)
   numProj <- length(projList)
   first <- T
@@ -59,9 +59,9 @@ create_top_percent_table <- function(yourdir = '.') {
       calc_all_stats(yourdir, metadataCol)
     }
     gene.names = row.names(read.table(file = countsFile, header = T, sep = '\t', row.names = 1, stringsAsFactors = T))
-    
+
     if(first) {
-      # create large matrix so no need to cbind for efficiency 
+      # create large matrix so no need to cbind for efficiency
       #   (not actually sure if this helps at all)
       # hard coded in 1000 because I don't know a better way to correct for variable
       # number of genes

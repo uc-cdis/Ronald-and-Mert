@@ -5,15 +5,15 @@ whole_process <- function(projects, # use files with project_ids or a vector
                           # of project_ids
                           # parameters to skip certain parts of script
                           skip_to_merging = F,
-                          skip_to_metadata = F, 
-                          skip_rendering = F, 
-                          skip_to_corr_matrix = F, 
-                          # size_lim for every project: only downloads XX 
+                          skip_to_metadata = F,
+                          skip_rendering = F,
+                          skip_to_corr_matrix = F,
+                          # size_lim for every project: only downloads XX
                           # number of files per project if XX files are
                           # available
-                          size_lim = F, 
+                          size_lim = F,
                           # option to render heatmap dendrogram
-                          heatmap_option = F) {	
+                          heatmap_option = F) {
 
   if (skip_to_metadata == T) {
     skip_to_merging = T
@@ -32,7 +32,7 @@ whole_process <- function(projects, # use files with project_ids or a vector
   to_log("START")
 
   # from Kevin_R_scripts
-  source("~/git/Ronald-and-Mert/install_r_prereqs.r")       
+  source("~/git/Ronald-and-Mert/install_r_prereqs.r")
   source("~/git/Ronald-and-Mert/preprocessing_tool.r")
   source("~/git/Ronald-and-Mert/heatmap_dendrogram.r")
   source("~/git/Ronald-and-Mert/calculate_pco.r")
@@ -98,12 +98,12 @@ whole_process <- function(projects, # use files with project_ids or a vector
   to_log("Getting Metadata")
   get_GDC_metadata("counts_files.merged_data_file_UUIDs", my_rot = "yes")
 
-  # gets metadata_filename 
+  # gets metadata_filename
   # (obsolete now but useful for interacting with old metadata filenames)
   files <- list.files()[grep("GDC_METADATA.txt", list.files())]
   details <- file.info(list.files()[grep("GDC_METADATA.txt", list.files())])
   details <- details[with(details, order(as.POSIXct(mtime))), ]
-  metadata_filename <- rownames(details)[length(files)] 
+  metadata_filename <- rownames(details)[length(files)]
   print(metadata_filename)
   to_log("Metadata Download Completed")
 
@@ -124,11 +124,11 @@ whole_process <- function(projects, # use files with project_ids or a vector
   if (skip_rendering == F) {
     to_log("Rendering PCoA")
     # renders a PCoA for every piece of metadata
-    render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA", 
-                           metadata_table = metadata_filename, 
+    render_calcualted_pcoa("counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA",
+                           metadata_table = metadata_filename,
                            use_all_metadata_columns = T)
     to_log("Rendering Completed")
-  }	
+  }
 
   to_log("Creating Correlation Matrix")
   correlate_pcoa("counts_files.merged_data_file_UUIDs.GDC_METADATA.txt",
@@ -171,9 +171,9 @@ individual_analysis <- function() {
       whole_process(p, skip_rendering = T)
       # return back to /mnt
       setwd("/mnt/single_projects")
-    } else if (file.exists(file.path("/mnt/single_projects", p, 
-                                     "counts_files.merged_data_file_UUIDs")) & 
-               !file.exists(file.path("/mnt/single_projects", p, 
+    } else if (file.exists(file.path("/mnt/single_projects", p,
+                                     "counts_files.merged_data_file_UUIDs")) &
+               !file.exists(file.path("/mnt/single_projects", p,
                                       "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA"))) {
       # check if it has already downloaded all the data
       setwd(file.path("/mnt/single_projects", p))
@@ -184,8 +184,8 @@ individual_analysis <- function() {
     # that didn't have them previously when running earlier version of code
     temp <- list.files()
     metadataFile <- temp[grepl("GDC_METADATA.txt$", temp)]
-    if (!is.null(metadataFile) & 
-        file.exists(file.path("/mnt/single_projects", p, 
+    if (!is.null(metadataFile) &
+        file.exists(file.path("/mnt/single_projects", p,
                               "counts_files.merged_data.txt.DESeq_blind.PREPROCESSED.txt.euclidean.PCoA")) &
         !file.exists(file.path("/mnt/single_projects", p, "cor_summary.txt"))) {
       for(i in metadataFile) {

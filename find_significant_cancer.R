@@ -1,27 +1,27 @@
 library(dunn.test)
 
-FindSignificantCancer <- function(data.filename, metadata.filename, 
-                                  gene, metadata.col, 
+FindSignificantCancer <- function(data.filename, metadata.filename,
+                                  gene, metadata.col,
                                   alpha.level = .001, convert = F) {
   data.table <- read.table(file=data.filename,
                            row.names=1,
                            header=TRUE,
                            sep="\t",
-                           colClasses = "character", 
+                           colClasses = "character",
                            check.names=FALSE,
                            comment.char = "",
-                           quote="", 
-                           fill=TRUE, 
+                           quote="",
+                           fill=TRUE,
                            blank.lines.skip=FALSE)
   metadata.table <- read.table(file=metadata.filename,
                                row.names=1,
                                header=TRUE,
                                sep="\t",
-                               colClasses = "character", 
+                               colClasses = "character",
                                check.names=FALSE,
                                comment.char = "",
-                               quote="", 
-                               fill=TRUE, 
+                               quote="",
+                               fill=TRUE,
                                blank.lines.skip=FALSE)
   if (gene == "ALL") {
     gene <- (1:nrow(data.table))
@@ -44,7 +44,7 @@ FindSignificantCancer <- function(data.filename, metadata.filename,
     gene.name.table <- ConvertEnsemblToName(ensembl.ids.sans.ending)
   }
   for (g in ensembl.ids) {
-    dunn.test.results <- dunn.test(as.numeric(data.table[g,]), 
+    dunn.test.results <- dunn.test(as.numeric(data.table[g,]),
                                    metadata.table[[metadata.col]],
                                    method = "bonferroni",
                                    table = F)
@@ -65,7 +65,7 @@ FindSignificantCancer <- function(data.filename, metadata.filename,
     } else {
       write(g, paste(g, "significant.cancers", sep = "."))
     }
-    write.table(names.count.table, 
+    write.table(names.count.table,
                 file = paste(g, "significant.cancers", sep = "."),
                 sep = "\t",
                 row.names = F,

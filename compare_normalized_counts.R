@@ -1,11 +1,11 @@
 CompareCounts <- function(counts.file.name, reference.file.name, tissue.col, project) {
   counts <- read.table(counts.file.name, row.names=1,
-                            header=TRUE, sep="\t", colClasses = "character", 
-                            check.names=FALSE,comment.char = "", 
+                            header=TRUE, sep="\t", colClasses = "character",
+                            check.names=FALSE,comment.char = "",
                             fill=TRUE, blank.lines.skip=FALSE)
   reference <- read.table(reference.file.name, row.names=1,
-                            header=TRUE, sep="\t", colClasses = "character", 
-                            check.names=FALSE,comment.char = "", 
+                            header=TRUE, sep="\t", colClasses = "character",
+                            check.names=FALSE,comment.char = "",
                             fill=TRUE, blank.lines.skip=FALSE)
   rownames(counts) <- unlist(strsplit(rownames(counts), "\\."))[(1:nrow(counts))*2-1]
   result.frame <- data.frame(matrix(NA, nrow = nrow(reference), 3))
@@ -20,8 +20,8 @@ CompareCounts <- function(counts.file.name, reference.file.name, tissue.col, pro
     result.frame[r, 2] <- result$estimate
     result.frame[r, 1] <- reference[r, tissue.col]
   }
-  ordered.result.frame <- result.frame[order(result.frame[["p-value"]], 
+  ordered.result.frame <- result.frame[order(result.frame[["p-value"]],
                                              -abs(as.numeric(result.frame[["reference"]]) - as.numeric(result.frame[["estimate"]]))), ]
-  write.table(ordered.result.frame, file = paste(project, "different_genes.txt", sep = "."), 
+  write.table(ordered.result.frame, file = paste(project, "different_genes.txt", sep = "."),
               sep = "\t", quote = F, col.names = NA, row.names = T)
 }

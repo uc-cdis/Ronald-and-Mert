@@ -2,7 +2,7 @@ preprocessing_tool <- function(
                                   data_in,     # name of the input file (tab delimited text with the raw counts) or R matrix
                                   data_type             ="file",  # c(file, r_matrix)
                                   output_object         ="default", # output R object (matrix)
-                                  output_file           ="default", # output flat file                       
+                                  output_file           ="default", # output flat file
                                   removeSg              = TRUE, # boolean to remove singleton counts
                                   removeSg_valueMin     = 2, # lowest retained value (lower converted to 0)
                                   removeSg_rowMin       = 4, # lowest retained row sum (lower, row is removed)
@@ -23,15 +23,15 @@ preprocessing_tool <- function(
                                   boxplot_width_in      = "default", #"8.5,
                                   boxplot_res_dpi       = 300,
                                   create_log            = TRUE,
-                                  debug                 = FALSE                                  
+                                  debug                 = FALSE
                                   )
 
   {
 
-    # Install DESeq  
+    # Install DESeq
     #source("https://bioconductor.org/biocLite.R")
     #biocLite("DESeq")
-      
+
     # check for necessary packages, install if they are not there
     #require(matR) || install.packages("matR", repo="http://mcs.anl.gov/~braithwaite/R", type="source")
     #chooseCRANmirror()
@@ -54,7 +54,7 @@ preprocessing_tool <- function(
     #library(RColorBrewer)
 
     ###### MAIN
-    
+
     # get the name of the data object if an object is used -- use the filename if input is filename string
     if ( identical( data_type, "file") ){
       input_name <- data_in
@@ -62,7 +62,7 @@ preprocessing_tool <- function(
       input_name <- deparse(substitute(data_in))
     }else{
       stop( paste( data_type, " is not a valid option for data_type", sep="", collapse=""))
-    }    
+    }
 
     # Generate names for the output file and object
     if ( identical( output_object, "default") ){
@@ -80,22 +80,22 @@ preprocessing_tool <- function(
     }else{
       stop( paste( data_type, " is not a valid option for data_type", sep="", collapse=""))
     }
-    
+
     # sort the data (COLUMNWISE) by id
     sample_names <- order(colnames(input_data))
     input_data <- input_data[,sample_names]
-    
+
     # make a copy of the input data that is not processed
     input_data.og <- input_data
- 
+
     # non optional, convert "na's" to 0
     input_data[is.na(input_data)] <- 0
-    
+
     # remove singletons
     if(removeSg==TRUE){
       input_data <- remove.singletons(x=input_data, lim.entry=removeSg_valueMin, lim.row=removeSg_rowMin, debug=debug)
     }
-    
+
     # log transform log(x+1)2
     if ( log_transform==TRUE ){
       input_data <- log_data(input_data, pseudo_count)
@@ -105,7 +105,7 @@ preprocessing_tool <- function(
     # Normalize -- stadardize or quantile norm (depends on user selection)
     switch(
            norm_method,
-           
+
            standardize={
              input_data <- standardize_data(input_data)
            },
@@ -134,9 +134,9 @@ quickly"
              #regression_message <- paste("DESeq regression:      ", regression_filename, sep="", collapse="" )
              #input_data <- DESeq_norm_data(input_data, regression_filename, pseudo_count,
              #                              DESeq_metadata_table, DESeq_metadata_column, sample_names,
-             #                              DESeq_method="per-condition", DESeq_sharingMode, DESeq_fitType, DESeq_image, debug)    
+             #                              DESeq_method="per-condition", DESeq_sharingMode, DESeq_fitType, DESeq_image, debug)
            },
-           
+
            DESeq_pooled={
              if( is.na(DESeq_metadata_table) ){ stop("To DESeq_pooled you must specify a DESeq_metadata_table") }
              regression_filename = paste(  input_name, ".DESeq_regression.png", sep="", collapse="" )
@@ -147,14 +147,14 @@ quickly"
            },
 
            DESeq_pooled_CR={
-             if( is.na(DESeq_metadata_table) ){ stop("To DESeq_pooled_CR you must specify a DESeq_metadata_table") }             
+             if( is.na(DESeq_metadata_table) ){ stop("To DESeq_pooled_CR you must specify a DESeq_metadata_table") }
              regression_filename = paste(  input_name, ".DESeq_regression.png", sep="", collapse="" )
              regression_message <- paste("DESeq regression:      ", regression_filename, sep="", collapse="" )
              input_data <- DESeq_norm_data(input_data, regression_filename, pseudo_count,
                                            DESeq_metadata_table, DESeq_metadata_column, sample_names,
-                                           DESeq_method="pooled-CR", DESeq_sharingMode, DESeq_fitType, DESeq_image, debug)  
+                                           DESeq_method="pooled-CR", DESeq_sharingMode, DESeq_fitType, DESeq_image, debug)
            },
-             
+
            none={
              input_data <- input_data
            },
@@ -162,28 +162,28 @@ quickly"
              stop( paste( norm_method, " is not a valid option for method", sep="", collapse=""))
            }
            )
-    
-    # scale normalized data [max..min] to [0..1] over the entire dataset 
+
+    # scale normalized data [max..min] to [0..1] over the entire dataset
     if ( scale_0_to_1==TRUE ){
       input_data <- scale_data(input_data)
     }
-    
+
     # create object, with specified name, that contains the preprocessed data
     do.call("<<-",list(output_object, input_data))
- 
+
     # write flat file, with specified name, that contains the preprocessed data
     write.table(input_data, file=output_file, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
-    
+
     # produce boxplots
     boxplot_message <- "output boxplot:        NA"
     if ( produce_boxplots==TRUE ) {
-    
+
       if( identical(boxplots_file_out, "default") ){
           boxplots_file <- paste(input_name, ".boxplots.png", sep="", collapse="")
       }else{
           boxplots_file <- boxplots_file_out
       }
-      
+
       if( identical(boxplot_height_in, "default") ){ boxplot_height_in <- 8.5 }
       #if( identical(boxplot_width_in, "default") ){ boxplot_width_in <- round(ncol(input_data)/14) }
       if( identical(boxplot_width_in, "default") ){ boxplot_width_in <- 11 }
@@ -209,7 +209,7 @@ quickly"
     # message to send to the user after completion, given names for object and flat file outputs
     #writeLines( paste("Data have been preprocessed. Proprocessed, see ", log_file, " for details", sep="", collapse=""))
 
-    
+
     if ( create_log==TRUE ){
       # name log file
       log_file <- paste( output_file, ".log", sep="", collapse="")
@@ -282,15 +282,15 @@ quickly"
                        )
                  #con=log_file
                  )
-      
+
     }
-    
- 
-      
+
+
+
   }
 
 
-    
+
 
 
 
@@ -301,9 +301,9 @@ quickly"
 ### SUBS
 ######################################################################
 ######################################################################
-    
+
 ######################################################################
-### Load metadata (for groupings)    
+### Load metadata (for groupings)
 ######################################################################
 load_metadata <- function(group_table, group_column, sample_names){
   metadata_matrix <- as.matrix( # Load the metadata table (same if you use one or all columns)
@@ -313,7 +313,7 @@ load_metadata <- function(group_table, group_column, sample_names){
                                           comment.char = "",quote="",fill=TRUE,blank.lines.skip=FALSE
                                           )
                                )
-      
+
   #metadata_matrix <- metadata_matrix[ order(sample_names),,drop=FALSE ]
   group_names <- metadata_matrix[ order(sample_names), group_column,drop=FALSE ]
   return(group_names)
@@ -330,7 +330,7 @@ remove.singletons <- function (x, lim.entry, lim.row, debug) {
   #x [ apply(x, MARGIN = 1, sum) >= lim.row, ] # THIS DOES NOT WORK - KEEPS ORIGINAL MATRIX
   x <- x [ apply(x, MARGIN = 1, sum) >= lim.row, ] # row sum equal to or greater than limit is retained
   if (debug==TRUE){write.table(x, file="sg_removed.txt", sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")}
-  x  
+  x
 }
 ######################################################################
 
@@ -389,7 +389,7 @@ DESeq_norm_data <- function (x, regression_filename, pseudo_count,
     stop(paste("DESeq requires an integer pseudo_count, (", pseudo_count, ") is not an integer" ))
   }
 
-  
+
   # import metadata matrix (from object or file)
   #if(!is.na(DESeq_metadata_table)){
   #  my_metadata <- load_metadata(DESeq_metadata_table, DESeq_metadata_column, sample_names)
@@ -408,22 +408,22 @@ DESeq_norm_data <- function (x, regression_filename, pseudo_count,
   }
 
   if(debug==TRUE)(print("made it here DESeq (2)"))
-  
+
   # add pseudocount to prevent workflow from crashing on NaNs - DESeq will crash on non integer counts
-  x = x + pseudo_count 
- 
+  x = x + pseudo_count
+
   # create dataset object
   if(debug==TRUE){my_conditions.test<<-my_conditions}
   my_dataset <- newCountDataSet( x, my_conditions )
   if(debug==TRUE){my_dataset.test1 <<- my_dataset}
   if(debug==TRUE)(print("made it here DESeq (3)"))
-  
+
   # estimate the size factors
   my_dataset <- estimateSizeFactors(my_dataset)
 
   if(debug==TRUE)(print("made it here DESeq (4)"))
   if(debug==TRUE){my_dataset.test2 <<- my_dataset}
-  
+
   # estimate dispersions
   # reproduce this: deseq_varstab(physeq, method = "blind", sharingMode = "maximum", fitType = "local")
   #      see https://stat.ethz.ch/pipermail/bioconductor/2012-April/044901.html
@@ -439,11 +439,11 @@ DESeq_norm_data <- function (x, regression_filename, pseudo_count,
   # ls(my_dataset.test4@fitInfo)
 
                                         #  my_dataset <- estimateDispersions(my_dataset, method = DESeq_method, sharingMode = DESeq_sharingMode, fitType = DESeq_fitType)
-  
+
   if(debug==TRUE){my_dataset.test3 <<- my_dataset}
 
   if(debug==TRUE)(print("made it here DESeq (5)"))
-  
+
   # Determine which column(s) have the dispersion estimates
   dispcol = grep("disp\\_", colnames(fData(my_dataset)))
 
@@ -453,7 +453,7 @@ DESeq_norm_data <- function (x, regression_filename, pseudo_count,
   #}
 
   if(debug==TRUE)(print("made it here DESeq (6)"))
-  
+
   # apply variance stabilization normalization
   #if ( identical(DESeq_method, "per-condition") ){
 
@@ -466,15 +466,15 @@ DESeq_norm_data <- function (x, regression_filename, pseudo_count,
         res = 300,
         units = 'in'
         )
-        #plot.new()    
+        #plot.new()
     plotDispEsts( my_dataset )
     dev.off()
   }
 
 if(debug==TRUE)(print("made it here DESeq (7)"))
-  
 
-  
+
+
   my_dataset.normed <- varianceStabilizingTransformation(my_dataset)
   # ls(my_dataset.test4@fitInfo)
   # my_dataset.test4@fitInfo$Kirsten$fittedDispEsts
@@ -484,7 +484,6 @@ if(debug==TRUE)(print("made it here DESeq (7)"))
   #}else{
    # my_dataset.normed <- varianceStabilizingTransformation(my_dataset)
   #}
-    
 
 
 
@@ -493,8 +492,9 @@ if(debug==TRUE)(print("made it here DESeq (7)"))
 
 
 
-  
-  
+
+
+
   # return matrix of normed values
   x <- exprs(my_dataset.normed)
   x
@@ -512,5 +512,3 @@ scale_data <- function(x){
   x
 }
 ######################################################################
-
-

@@ -11,20 +11,20 @@ script, directory = sys.argv
 def find_common_metadata(mydir = ".", nameFilter = "cor_summary_spearman.txt.filtered.PCO:15.r:0.6.p:0.001"):
 	"""
 	Iterates through a directory that contains subdirectories with each project
-	and produces a file with the significant metadata for each project if 
+	and produces a file with the significant metadata for each project if
 	the filtered file exists (the file that's produced by filter_cor_matrix.r)
 
 	Args:
 		mydir: The directory that contains all the project subdirectories
 		nameFilter: Part of the name of the filtered file that's spit out
-					by filter_cor_matrix.r 
+					by filter_cor_matrix.r
 					(example: cor_summary_spearman.txt.filtered.PCO:15.r:0.6.p:0.001)
-	
+
 	Returns:
 		(None)
 		Exports two tables: shared_table.*filter*.tsv and unique_table.*filter*.tsv
 		shared_table: table of the pieces of metadata that passed the filter along
-					with the number of a projects and which projects were in 
+					with the number of a projects and which projects were in
 					the filtered table
 		unique_table: table of the pieces of metadata that passed the filter for
 					only a single project
@@ -49,8 +49,8 @@ def find_common_metadata(mydir = ".", nameFilter = "cor_summary_spearman.txt.fil
                     myfile = f
             filteredFileName = os.path.join(mydir, project, myfile)
 			# metadataList = [[metadata1, value1], [metadata2, value2], ...]
-            metadataList = find_metadata(filteredFileName) 
-			# adds to a metadataDict with metadata: 
+            metadataList = find_metadata(filteredFileName)
+			# adds to a metadataDict with metadata:
 			# 	{metadata1: [[proj1, value1], [proj2, value2], ...], metadata2: ...}
             # if list isn't empty
             if metadataList:
@@ -99,10 +99,10 @@ def find_common_metadata(mydir = ".", nameFilter = "cor_summary_spearman.txt.fil
 def find_metadata(filtered):
 	"""
 	Process correlation matrix that has been processed by filtere_cor_matrix.r
-	Args: 
+	Args:
 		filtered: File that shows which pieces of metadata fit filtered requirements
 				(file exported by filter_cor_matrix.r)
-	
+
 	Returns:
 		List of significant metadata and the PCO:R:P value:
 			[[metadata1, value1], [metadata2, value2], ...]
