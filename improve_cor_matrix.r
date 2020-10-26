@@ -26,4 +26,3 @@ edit_all_matrices <- function()
 		}
 	}
 }
-

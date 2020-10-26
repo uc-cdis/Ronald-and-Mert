@@ -1,9 +1,9 @@
 GDC_raw_count_merge <- function( id_list="my_id_list", my_rot="no", pseudo_fudge=NA, order_rows=TRUE,  order_columns=TRUE, debug=FALSE, verbose=FALSE, remove_tag=".htseq.counts")
 
-{                       
+{
   ### MAIN ###
   ###### load the neccessary packages
-  if ( is.element("matlab", installed.packages()[,1]) == FALSE ){ install.packages("matlab") }    
+  if ( is.element("matlab", installed.packages()[,1]) == FALSE ){ install.packages("matlab") }
   library(matlab)
 
   if(debug==TRUE){print("Made it here 1")}
@@ -51,7 +51,7 @@ GDC_raw_count_merge <- function( id_list="my_id_list", my_rot="no", pseudo_fudge
 
 
 
-### SUBS ###                    
+### SUBS ###
 export_data <- function(data_object, file_name){
   write.table(data_object, file=file_name, sep="\t", col.names = NA, row.names = TRUE, quote = FALSE, eol="\n")
 }
@@ -63,6 +63,4 @@ flatten_list <- function(some_list){
   flat_list <- gsub("\r","",flat_list)
   flat_list <- gsub("\n","",flat_list)
   flat_list <- gsub("\t","",flat_list)
-}    
-
-
+}

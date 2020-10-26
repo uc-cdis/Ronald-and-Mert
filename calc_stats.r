@@ -11,7 +11,7 @@ calc_stats <<- function(
   order_decreasing=FALSE,
   ...)
 {
-  
+
   # tests ("Kruskal-Wallis", )
   if ( is.element("matR", installed.packages()[,1]) == FALSE ){
     install.packages("devtools")
@@ -21,7 +21,7 @@ calc_stats <<- function(
     dependencies()
   }
   library(matR)
-  
+
   # read in the abundance data
   if( identical(input_type,"file") ){
     data_matrix <- data.matrix(read.table(
@@ -35,25 +35,25 @@ calc_stats <<- function(
     )
     )
   } else if (identical(input_type,"r_table")) {
-    data_matrix <- data_table       
+    data_matrix <- data_table
   } else {
     stop("data_table value is not valid, must be file or r_table")
   }
-  
+
   csvfile <- function(id) {
-    if (id < 10) { 
+    if (id < 10) {
       paste0(0,0,id,".csv")
     } else if (id < 100) {
       paste0(0,id,".csv")
     } else paste0(id,".csv")
   }
-  
-  
-  
-  
+
+
+
+
   # Here, make sure that the data are sorted COLUMNWISE by id
   data_matrix <-  data_matrix[,order(colnames(data_matrix))]
-  
+
   # read in the metadata
   metadata_matrix <- as.matrix(
     read.table(
@@ -73,25 +73,25 @@ calc_stats <<- function(
   if (metadata_row == 0){
     # make sure that the color matrix is sorted (ROWWISE) by id
     metadata_matrix <-  metadata_matrix[order(rownames(metadata_matrix)),]
-    
+
     # retrieve the selected grouping
     groups.list <- (metadata_matrix[,metadata_column])
-    names(groups.list) <- rownames(metadata_matrix) 
+    names(groups.list) <- rownames(metadata_matrix)
   }else{
     # make sure that the color matrix is sorted (COLWISE) by id
     metadata_matrix <-  metadata_matrix[,order(colnames(metadata_matrix))]
-    
+
     # retrieve the selected grouping
     groups.list <- (metadata_matrix[metadata_row,])
     print(groups.list)
-    names(groups.list) <- colnames(metadata_matrix) 
+    names(groups.list) <- colnames(metadata_matrix)
   }
   # sigtest to perform stats
   # place selected stat in variable for use below
   # my_stat = "Kruskal-Wallis"
   # perform stat tests (uses matR)
   my_stats <- sigtest(data_matrix, groups.list, stat_test)
-  
+
   # Create headers for the data columns
   for (i in 1:dim(data_matrix)[2]){
     if ( append_group_headers==TRUE ){ # append group to data column header if selected
@@ -112,10 +112,10 @@ calc_stats <<- function(
   colnames(my_stats.p) <- paste(stat_test, "::p", sep="")
   my_stats.fdr <- as.matrix(p.adjust(my_stats$p.value))
   colnames(my_stats.fdr) <- paste(stat_test, "::fdr", sep="")
-  
+
   # generate a summary object - used to generate the plots, and can be used to create a flat file output
   my_stats.summary <- cbind(data_matrix, my_stats$mean, my_stats$sd, my_stats.statistic, my_stats.p, my_stats.fdr)
-  
+
   # make sure that order_by value, if other than NULL is supplied, is valid
   if (is.null(order_by)){ # use last column by default, or specified column otherwise
     order_by <- ( ncol(my_stats.summary) )
@@ -132,12 +132,12 @@ calc_stats <<- function(
       }
     }
   }
-  
+
   # order the data by the selected column - placing ordered data in a new object
   my_stats.summary.ordered <- my_stats.summary[ order(my_stats.summary[,order_by], decreasing=order_decreasing), ]
-  
-  
-  
+
+
+
   # create name for the output file
   if ( identical(file_out, "default") ){
     if ( is.na(colnames(metadata_matrix)[metadata_column]) == TRUE ){
@@ -146,8 +146,8 @@ calc_stats <<- function(
       file_out = paste(data_table, ".", stat_test, ".", colnames(metadata_matrix)[metadata_column], ".STATS_RESULTS.txt", sep="", collapse="")
     }
   }
-  
+
   # flat file output of the summary file
   write.table(my_stats.summary.ordered, file = file_out, col.names=NA, sep="\t", quote=FALSE)
-  
+
 }

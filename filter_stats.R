@@ -18,7 +18,7 @@ FilterStats <- function(filename, percent = .01, exclude.y = F, fdr.cutoff = F) 
     ensembl_genes<- gsub( "\\..*", "", gene_data[,1] )
     #map gene ID to chr
     result <- getBM(
-      filters= "ensembl_gene_id", 
+      filters= "ensembl_gene_id",
       attributes= c("ensembl_gene_id","chromosome_name"),
       values= ensembl_genes,
       mart= mart)

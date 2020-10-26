@@ -9,15 +9,15 @@ order_corr_matrix <- function(corr_matrix,p_matrix)
     }
   }
   corr <<- corr
-  
+
   a <<- apply(corr, 1, function(row) {
     #row <- gsub( " .*$", "", row )
     rowWithName <- paste(names(row), row, sep=":")
     #print(row)
     rowWithName[order(abs(as.numeric(gsub( ":.*$", "", row ))), decreasing = T)]
     })
-  
-  
+
+
   write.table(a, file = paste0(corr_matrix, ".ordered"), sep = "\t", row.names = F)
 }
 
